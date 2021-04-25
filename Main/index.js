@@ -1,104 +1,134 @@
-const inquirer = require('inquirer'); 
+const inquirer = require('inquirer');
 const fs = require('fs');
 
-const questions = [ 
+const employees = [];
 
-    managerQuestions = [
-        {
-            type: 'input',
-            message: "What is the team manager's name?",
-            name: 'name'
-        },
-        {
-            type: 'input',
-            message: "What is the team manager's id?",
-            name: 'id'
-        },
-        {
-            type: 'input',
-            message: "What is the team manager's email?",
-            name: 'email'
-        },
-        {
-            type: 'input',
-            message: "What is the team manager's office number?",
-            name: 'office'
-        },
-        {
-            type: 'list',
-            message: 'Which type of team member would you like to add?',
-            name: 'member',
-            choices: ['Engineer', 'Intern', 'I do not want to add anymore team members']
-        },
-    ],
-
-    internQuestions = [
-        {
-            type: 'input',
-            message: "What is the intern's name?",
-            name: 'name'
-        },
-        {
-            type: 'input',
-            message: "What is the intern's id?",
-            name: 'id'
-        },
-        {
-            type: 'input',
-            message: "What is the intern's email?",
-            name: 'email'
-        },
-        {
-            type: 'input',
-            message: "What is the intern's school?",
-            name: 'school'
-        },
-    ],
-    
-    engineerQuestions = [
-        {
-            type: 'input',
-            message: "What is the engineer's name?",
-            name: 'name'
-        },
-        {
-            type: 'input',
-            message: "What is the engineer's id?",
-            name: 'id'
-        },
-        {
-            type: 'input',
-            message: "What is the engineer's email?",
-            name: 'email'
-        },
-        {
-            type: 'input',
-            message: "What is the engineer's GitHub username?",
-            name: 'github'
-        },
-    ]
+const managerQuestions = [
+    {
+        type: 'input',
+        message: "What is the team manager's name?",
+        name: 'mName'
+    },
+    {
+        type: 'input',
+        message: "What is the team manager's id?",
+        name: 'mId'
+    },
+    {
+        type: 'input',
+        message: "What is the team manager's email?",
+        name: 'mEmail'
+    },
+    {
+        type: 'input',
+        message: "What is the team manager's office number?",
+        name: 'mOffice'
+    }
 ]
 
-inquirer
-    .prompt(managerQuestions)
-    .then(data => {
-        if (data.member == 'Engineer') {
-            inquirer 
-                .prompt(engineerQuestions)
-        }
-    }), 
-        
-        
-        
-        
-    //     (data) => {
-    //     fs.writeFile('./dist/index.html', generateHtml(data), (error) => 
-    //     error? console.error(error) : console.log('Generating HTML...'))
-    // })
+const internQuestions = [
+    {
+        type: 'input',
+        message: "What is the intern's name?",
+        name: 'iName'
+    },
+    {
+        type: 'input',
+        message: "What is the intern's id?",
+        name: 'iId'
+    },
+    {
+        type: 'input',
+        message: "What is the intern's email?",
+        name: 'iEmail'
+    },
+    {
+        type: 'input',
+        message: "What is the intern's school?",
+        name: 'iSchool'
+    },
+]
 
+const engineerQuestions = [
+    {
+        type: 'input',
+        message: "What is the engineer's name?",
+        name: 'eName'
+    },
+    {
+        type: 'input',
+        message: "What is the engineer's id?",
+        name: 'eId'
+    },
+    {
+        type: 'input',
+        message: "What is the engineer's email?",
+        name: 'eEmail'
+    },
+    {
+        type: 'input',
+        message: "What is the engineer's GitHub username?",
+        name: 'eGithub'
+    },
+]
+
+const memberQuestion = {
+    type: 'list',
+    message: 'Which type of team member would you like to add?',
+    name: 'member',
+    choices: ['Engineer', 'Intern', 'I do not want to add anymore team members']
+}
+
+function init() {
+    inquirer
+        .prompt(managerQuestions)
+        .then(data => {
+            console.log(data);
+            const manager = new Manager(data.mName, data.mId, data.mEmail, data.mOffice);
+            employees.push(manager)
+        })
+}
+
+function memberSelect() {
+    if (data.member == 'Engineer') {
+        inquirer
+            .prompt(memberQuestion)
+    } else if (data.member == 'Intern') {
+        inquirer
+            .prompt(internQuestions)
+    } else {
+        generateHtml()
+    }
+}
+
+function inputEngineer() {
+    inquirer
+        .prompt(engineerQuestions)
+        .then(data => {
+            console.log(data);
+            const engineer = new Engineer(data.eName, data.eId, data.eEmail, data.eGithub);
+            employees.push(engineer)
+        })
+}
+
+function inputIntern() {
+    inquirer
+    .prompt(internQuestions)
+    .then(data => {
+        console.log(data);
+        const intern = new Intern(data.iName, data.iId, data.iEmail, data.iSchool);
+        employees.push(intern)
+    })
+}
+
+function generateCards(data) {
+    fs.appendFile('./dist/index.html', data.mName) //come back 
+}
 
 function generateHtml(data) {
-    return `<!DOCTYPE html>
+    // generateCards(data)
+    console.log(employees)
+    writeFile(`<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -114,8 +144,15 @@ function generateHtml(data) {
         <h1 class="display-4">My Team</h1>
         </div>
         </div> 
+        <h3>${manager.name}</h3>
     </body>
-    </html>`
+    </html>`)
 }
 
-    
+function writeFile(htmlString) {
+    fs.writeFile('./dist/index.html', htmlString, (error) =>
+        error ? console.error(error) : console.log('Generating HTML...')) // coming too soon
+}
+
+
+init() 
