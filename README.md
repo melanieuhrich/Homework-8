@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Team Profile Generator
 
 ## Purpose of Assignment
@@ -51,3 +52,6 @@ Line 172: Call init(), which will start the entire process.
 ## Screenshot of Sample HTML
 
 ![Screenshot](/Assets/teamgenerator.png)
+=======
+# Homework-8
+>>>>>>> 729714f4a9a59dca5b61ba1d0efbb675f3c3c7bc
