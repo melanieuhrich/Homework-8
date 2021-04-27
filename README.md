@@ -48,6 +48,6 @@ Line 172: Call init(), which will start the entire process.
 
 ![gif](/Assets/teamgenerator.gif)
 
-## Sample HTML
+## Screenshot of Sample HTML
 
-![screenshot](/Assets/myteam.png)
+![Screenshot](/Assets/teamgenerator.png)
