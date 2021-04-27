@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+function generateHtml(data) {
+    return `<!DOCTYPE html>
     <html lang="en">
     
     <head>
@@ -91,4 +92,7 @@
     
     </body>
     
-    </html>
+    </html>`
+}
+
+module.exports = generateHtml;
