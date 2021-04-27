@@ -1,6 +1,7 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 const generateHtml = require('./generateHtml')
+const Employee = require('./lib/employee');
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
@@ -8,26 +9,28 @@ const { WSAEHOSTDOWN } = require('constants');
 
 const employees = [];
 
+// let role = Employee.getRole()
+
 const managerQuestions = [
     {
         type: 'input',
         message: "What is the team manager's name?",
-        name: 'mName'
+        name: 'name'
     },
     {
         type: 'input',
         message: "What is the team manager's id?",
-        name: 'mId'
+        name: 'id'
     },
     {
         type: 'input',
         message: "What is the team manager's email?",
-        name: 'mEmail'
+        name: 'email'
     },
     {
         type: 'input',
         message: "What is the team manager's office number?",
-        name: 'mOffice'
+        name: 'office'
     }
 ]
 
@@ -89,7 +92,7 @@ function init() {
         .prompt(managerQuestions)  //prompt the user for responses
         .then(data => {   //THEN AFTER the user have given us responses
             console.log(data);
-            const manager = new Manager(data.mName, data.mId, data.mEmail, data.mOffice);
+            const manager = new Manager(data.name, data.id, data.email, data.office);
             employees.push(manager);
             memberSelect();
         })
@@ -116,33 +119,48 @@ function init() {
  * employees.forEach(employee=> {
  * templateMaker(employee)})
  */
+function miscProperty(employee) {
+    if (employee.getRole() == 'Engineer') {
+        return `<p>GitHub: <a href='[${employee.eGithub}](https://github.com/${employee.eGithub})'></a></p>`
+    } else if (employee.getRole() == 'Manager') {
+        return `<p>Office Number: ${employee.getOfficeNumber()}</p>`
+    } else {
+        return `<p>School: ${employee.iSchool}</p>`
+    }
 
-function getInfo(employee) {
+}
+function getInfo(employee) { 
     let template = 
     `<div class="col s12 m6">
         <div class="card blue-grey darken-1">
             <div class="card-content white-text">
                 <span class="card-title">${employee.name}</span>
-                <span>${employee.role}</span>
+                <span>${employee.getRole()}</span>
                 <hr>
                 <p>ID: ${employee.id}</p>
                 <hr>
                 <p>Email: <a href="#">${employee.email}</a></p>
                 <hr>
-                <p>Office number: </p>
+                ${miscProperty(employee)} 
             </div>
         </div>
     </div>`; 
     return template;
 }
 
-function appendCards(employeeData) {
+function appendCards() {
+    //there are no cards here
+    let html = ''; 
+
+    // console.log('working')
     employees.forEach(employee => {
-        getInfo(employee)
+        html += getInfo(employee)
     });
     // getInfo();
-    fs.appendFile('./dist/index.html', employeeData, (error) =>
-    error ? console.error(error) : console.log(''))
+    // htnml variable is a whole bunch of html cards for each employee as a string
+    // fs.writeFile('./dist/index.html', html, (error) =>
+    // error ? console.error(error) : console.log(''))
+    return html;
 }
 
 function memberSelect() {
@@ -154,8 +172,8 @@ function memberSelect() {
             } else if (data.member == 'Intern') {
                 inputIntern()
             } else {
-                writeFile(generateHtml())
-                .then(appendCards())
+                writeFile(generateHtml(appendCards()))
+                // .then(appendCards())
             }
         })
 }
